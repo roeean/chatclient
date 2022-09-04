@@ -27,7 +27,6 @@ function App() {
       switch (dataFromServer.type) {
 
       case 'message':
-        logger('Message recieved from server');
         setMessages(messages => [...messages, {
           message: dataFromServer.message,
           timestamp: new Date(dataFromServer.timestamp),

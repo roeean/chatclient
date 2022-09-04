@@ -16,9 +16,8 @@ function dynamicSort(property) {
 }
 
 const MessageList = ({messages, userName, typingUsers}) => {
-
   const typingUsersList = typingUsers.filter(({userName: user}) => user !== userName).map(({userName}) => userName).join(', ');
-
+ 
   return (
     <StyledMessageList self={true}>
       {messages.sort(dynamicSort('timestamp')).map((message, index) => <MessageBox key={index} message={message} self={message.userName === userName} /> )}
