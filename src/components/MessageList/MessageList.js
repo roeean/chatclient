@@ -16,12 +16,12 @@ function dynamicSort(property) {
 }
 
 const MessageList = ({messages, userName, typingUsers}) => {
-  const typingUsersList = typingUsers.filter(({userName: user}) => user !== userName).map(({userName}) => userName).join(', ');
- 
+  const typingUsersList = typingUsers.filter(({userName: user}) => user !== userName).map(({userName}) => userName);
+  const typingUsersString = typingUsersList.join(', ');
   return (
-    <StyledMessageList self={true}>
+    <StyledMessageList>
       {messages.sort(dynamicSort('timestamp')).map((message, index) => <MessageBox key={index} message={message} self={message.userName === userName} /> )}
-      {typingUsersList && <div className="typing">{typingUsersList} {typingUsersList.length > 1 ? 'are' : 'is'} typing...</div>}
+      {typingUsersString && <div className="typing">{typingUsersString} {typingUsersList.length > 1 ? 'are' : 'is'} typing...</div>}
     </StyledMessageList>
   );
 };

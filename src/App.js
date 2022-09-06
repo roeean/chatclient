@@ -8,22 +8,24 @@ import Sidebar from 'components/Layout/Sidebar';
 
 function App() {
 
+  const [isHistoryMode, setIsHistoryMode] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const [error, setError] = useState(null);
+  
   const [userName, setUserName] = useState('');
   const [userId, setUserId] = useState('');
   const [room, setRoom] = useState('');
   
   const [users, setUsers] = useState([]);
-  const [isTyping, setIsTyping] = useState(false);
-  const [isHistoryMode, setIsHistoryMode] = useState(false);
-
   const [messages, setMessages] = useState([]);
+  
   const [cacheMessages, setCacheMessages] = useState([]);
-  const [error, setError] = useState(null);
   
   useEffect(() => {
-    client.onmessage = (message) => {
-      const dataFromServer = JSON.parse(message.data);
+    client.onmessage = (request) => {
+      const dataFromServer = JSON.parse(request.data);
+      
       switch (dataFromServer.type) {
 
       case 'message':
@@ -56,8 +58,7 @@ function App() {
         break;
 
       case 'history':
-        const collection = dataFromServer.messages;
-        setMessages(collection.map(message => ({...message, timestamp: new Date(message.timestamp)})));
+        setMessages(dataFromServer.messages.map(message => ({...message, timestamp: new Date(message.timestamp)})));
         break;
       }
     };
@@ -91,8 +92,8 @@ function App() {
       setMessages(cacheMessages);
     }
     else {
-      setIsHistoryMode(true);
       setCacheMessages(messages);
+      setIsHistoryMode(true);
       client.send(JSON.stringify({
         type: 'history',
         room,
@@ -112,7 +113,7 @@ function App() {
     }
   },[isTyping]);
 
-  if (!isLoggedIn) return (<Login handleLogin={handleLogin} error={error} setError={setError} />);
+  if (!isLoggedIn) return (<Login handleLogin={handleLogin} userId={userId} error={error} setError={setError} />);
   return (
     <>
       <main>  

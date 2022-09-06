@@ -15,7 +15,7 @@ const MessageForm = ({handleSend, setIsTyping, isHistoryMode}) => {
   }, []);
 
   const handleSubmit = () => {
-    if(message === '') return;
+    if(message === '' || isHistoryMode) return;
     handleSend(message);
     setMessage('');
     textBoxRef.current.focus();
@@ -23,7 +23,7 @@ const MessageForm = ({handleSend, setIsTyping, isHistoryMode}) => {
 
   const debounceTyping = () => {
     let timer;
-    return function () {
+    return () => {
       if (timer) clearTimeout(timer);
       timer = setTimeout(() => {
         setIsTyping(false);
